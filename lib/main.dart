@@ -3,7 +3,7 @@ import 'package:dicoding_story_app/features/auth/register/register_screen.dart';
 import 'package:dicoding_story_app/features/story/add/add_story_screen.dart';
 import 'package:dicoding_story_app/features/story/detail/detail_story_screen.dart';
 import 'package:dicoding_story_app/features/story/list/list_story_screen.dart';
-import 'package:dicoding_story_app/main_provider.dart';
+import 'package:dicoding_story_app/main_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -12,50 +12,56 @@ void main() {
 }
 
 class DicodingStoryApp extends ConsumerWidget {
+  final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
+  DicodingStoryApp({super.key});
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final mainProvider = ref.watch(MainProvider.provider);
-    final mainNotifier = ref.read(MainProvider.provider.notifier);
+    final mainState = ref.watch(MainNotifier.provider);
+    final mainNotifier = ref.read(MainNotifier.provider.notifier);
 
     final authStack = [
-      MaterialPage(
+      const MaterialPage(
         key: LoginScreen.valueKey,
         child: LoginScreen(),
       ),
-      if (mainProvider.isRegister)
-        MaterialPage(
+      if (mainState.isRegister)
+        const MaterialPage(
           key: RegisterScreen.valueKey,
           child: RegisterScreen(),
         ),
     ];
 
     final mainStack = [
-      MaterialPage(
+      const MaterialPage(
         key: ListStoryScreen.valueKey,
         child: ListStoryScreen(),
       ),
-      MaterialPage(
-        key: DetailStoryScreen.valueKey,
-        child: DetailStoryScreen(),
-      ),
-      if (mainProvider.isAddStory)
-        MaterialPage(
+      if (mainState.storyIdExists)
+        const MaterialPage(
+          key: DetailStoryScreen.valueKey,
+          child: DetailStoryScreen(),
+        ),
+      if (mainState.isAddStory)
+        const MaterialPage(
           key: AddStoryScreen.valueKey,
           child: AddStoryScreen(),
         ),
     ];
 
-    final historyStack = mainProvider.isUserLoggedIn ? mainStack : authStack;
+    final historyStack = mainState.isUserLoggedIn ? mainStack : authStack;
 
     return MaterialApp(
       title: 'Dicoding Story App',
       home: Navigator(
+        key: navigatorKey,
         pages: historyStack,
         onPopPage: (route, result) {
-          final key = route.settings as ValueKey;
           mainNotifier.onPop();
           return route.didPop(result);
         },
+
       ),
     );
   }

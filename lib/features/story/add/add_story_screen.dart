@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class AddStoryScreen extends StatelessWidget {
-
+class AddStoryScreen extends ConsumerWidget {
   static const valueKey = ValueKey('AddStoryScreen');
 
   const AddStoryScreen({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return Container();
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Add Story'),
+      ),
+    );
   }
 }

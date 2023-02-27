@@ -5,17 +5,25 @@ import 'package:dicoding_story_app/features/story/add/state/add_story_value_stat
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class AddStoryValueNotifier extends StateNotifier<AddStoryValueState> {
-  static final provider =
-      StateNotifierProvider.autoDispose<AddStoryValueNotifier, AddStoryValueState>((ref) => AddStoryValueNotifier());
+  static final provider = StateNotifierProvider.autoDispose<
+      AddStoryValueNotifier,
+      AddStoryValueState>((ref) => AddStoryValueNotifier());
 
   Completer<XFile?>? _completer;
 
   AddStoryValueNotifier() : super(AddStoryValueState.init());
 
-  void setImageFile(XFile imageFile) {
+  void setImageFile(XFile? imageFile) {
     state = state.copy(
       imageFile: imageFile,
     );
+
+    if (imageFile == null) {
+      state = state.copy(messageImageError: "Please add a photo");
+      return;
+    }
+
+    state = state.removeImageError();
   }
 
   Future<XFile?> waitForResult() async {
@@ -29,6 +37,25 @@ class AddStoryValueNotifier extends StateNotifier<AddStoryValueState> {
 
   void onDescriptionOnChanged(String value) {
     state = state.copy(description: value);
+
+    if (value.isEmpty) {
+      state = state.copy(messageDescError: "Description can't be empty.");
+      return;
+    }
+
+    state = state.removeDescError();
   }
 
+  bool onButtonAddPressed() {
+    final file = state.imageFile;
+    final description = state.description;
+
+    if (file == null || description.isEmpty) {
+      onDescriptionOnChanged(description);
+      setImageFile(file);
+      return false;
+    }
+
+    return true;
+  }
 }

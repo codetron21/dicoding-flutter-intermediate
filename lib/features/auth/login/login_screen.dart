@@ -57,15 +57,14 @@ class LoginScreen extends ConsumerWidget {
                   keyboardType: TextInputType.emailAddress,
                   onChanged: loginFormNotifier.onEmailChanged,
                 ),
-                loginFormState.isEmailError
-                    ? Text(
+                if(loginFormState.isEmailError)
+                    Text(
                         loginFormState.messageEmailError,
                         style: const TextStyle(
                           color: Colors.red,
                           fontSize: 12,
                         ),
-                      )
-                    : Container(),
+                ),
                 const SizedBox(height: 8),
                 const Text(
                   'Password',
@@ -92,15 +91,14 @@ class LoginScreen extends ConsumerWidget {
                   obscureText: !loginFormState.isPasswordVisible,
                   onChanged: loginFormNotifier.onPasswordChanged,
                 ),
-                loginFormState.isPasswordError
-                    ? Text(
+                if(loginFormState.isPasswordError)
+                     Text(
                         loginFormState.messagePasswordError,
                         style: const TextStyle(
                           color: Colors.red,
                           fontSize: 12,
                         ),
-                      )
-                    : Container(),
+                      ),
                 const SizedBox(height: 8),
                 ElevatedButton(
                   onPressed: loginState.isLoading

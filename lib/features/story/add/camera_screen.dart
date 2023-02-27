@@ -125,13 +125,14 @@ class _CameraScreenState extends ConsumerState<CameraScreen>
     final previousCameraController = controller;
     final cameraController = CameraController(
       cameraDescription,
-      ResolutionPreset.medium,
-      enableAudio:false,
+      ResolutionPreset.low,
+      enableAudio: false,
     );
 
     await previousCameraController?.dispose();
 
     try {
+      cameraController.setFlashMode(FlashMode.off);
       await cameraController.initialize();
     } on CameraException catch (e) {
       print('Error initializing camera: $e');

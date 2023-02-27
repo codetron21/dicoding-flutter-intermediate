@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:camera/camera.dart';
+import 'package:dicoding_story_app/common/preferences.dart';
+import 'package:dicoding_story_app/common/widgets.dart';
 import 'package:dicoding_story_app/features/story/add/state/add_story_notifier.dart';
 import 'package:dicoding_story_app/features/story/add/state/add_story_value_notifier.dart';
 import 'package:dicoding_story_app/main_notifier.dart';
@@ -17,21 +19,32 @@ class AddStoryScreen extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() {
     return AddStoryState();
   }
-
 }
 
 class AddStoryState extends ConsumerState<AddStoryScreen> {
-
   @override
   Widget build(BuildContext context) {
     final addStoryValNotifier =
         ref.read(AddStoryValueNotifier.provider.notifier);
     final addStoryValState = ref.watch(AddStoryValueNotifier.provider);
 
-    final addStoryNotifier = ref.read(AddStoryNotifier.provider.notifier);
     final addStoryState = ref.watch(AddStoryNotifier.provider);
 
     final mainNotifier = ref.read(MainNotifier.provider.notifier);
+
+    ref.listen(AddStoryNotifier.provider, (_, next) {
+      if (next.isSuccess || next.isError) {
+        confirmDialog(
+          context: context,
+          message: next.message,
+          callback: () {
+            if (next.isSuccess) {
+              mainNotifier.onPop();
+            }
+          },
+        );
+      }
+    });
 
     return Scaffold(
       appBar: AppBar(
@@ -64,6 +77,14 @@ class AddStoryState extends ConsumerState<AddStoryScreen> {
                           ),
                         ),
                 ),
+                if (addStoryValState.isImageError)
+                  Text(
+                    addStoryValState.messageImageError,
+                    style: const TextStyle(
+                      color: Colors.red,
+                      fontSize: 12,
+                    ),
+                  ),
                 const SizedBox(height: 8),
                 Row(
                   mainAxisSize: MainAxisSize.max,
@@ -90,8 +111,10 @@ class AddStoryState extends ConsumerState<AddStoryScreen> {
                             ? null
                             : () {
                                 availableCameras().then((cameras) {
-                                  addStoryValNotifier.waitForResult().then((value) {
-                                    if(value == null) return;
+                                  addStoryValNotifier
+                                      .waitForResult()
+                                      .then((value) {
+                                    if (value == null) return;
                                     addStoryValNotifier.setImageFile(value);
                                   });
                                   mainNotifier.navigateToCamera(cameras);
@@ -119,21 +142,50 @@ class AddStoryState extends ConsumerState<AddStoryScreen> {
                   maxLines: 3,
                   onChanged: addStoryValNotifier.onDescriptionOnChanged,
                 ),
+                if (addStoryValState.isDescError)
+                  Text(
+                    addStoryValState.messageDescError,
+                    style: const TextStyle(
+                      color: Colors.red,
+                      fontSize: 12,
+                    ),
+                  ),
                 const SizedBox(height: 8),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: addStoryState.isLoading
+                      ? null
+                      : () {
+                          addStory(ref);
+                        },
                   child: const Text("Add"),
                 ),
               ],
             ),
           ),
-          // const Align(
-          //   alignment: Alignment.center,
-          //   child: CircularProgressIndicator(),
-          // )
+          if (addStoryState.isLoading)
+            const Align(
+              alignment: Alignment.center,
+              child: CircularProgressIndicator(),
+            )
         ],
       ),
     );
+  }
+
+  Future<void> addStory(WidgetRef ref) async {
+    final valNotifier = ref.read(AddStoryValueNotifier.provider.notifier);
+    final valState = ref.read(AddStoryValueNotifier.provider);
+    final notifier = ref.read(AddStoryNotifier.provider.notifier);
+    final isValid = valNotifier.onButtonAddPressed();
+
+    if (!isValid) return;
+
+    final token = await ref.read(LoginPreferences.provider).getToken();
+    final imageFile = valState.imageFile;
+
+    if (token == null || imageFile == null) return;
+
+    notifier.addStory(token, imageFile, valState.description);
   }
 
   Widget _showImage(String imagePath) {

@@ -1,6 +1,21 @@
 import 'package:intl/intl.dart';
 
-class StoryAddResponseModel {}
+class StoryAddResponseModel {
+  final bool error;
+  final String message;
+
+  const StoryAddResponseModel({
+    required this.error,
+    required this.message,
+  });
+
+  factory StoryAddResponseModel.fromJson(Map<String, dynamic> json) {
+    return StoryAddResponseModel(
+      error: json['error'],
+      message: json['message'],
+    );
+  }
+}
 
 class StoryGetAllResponseModel {
   final bool error;

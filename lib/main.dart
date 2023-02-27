@@ -1,6 +1,7 @@
 import 'package:dicoding_story_app/features/auth/login/login_screen.dart';
 import 'package:dicoding_story_app/features/auth/register/register_screen.dart';
 import 'package:dicoding_story_app/features/story/add/add_story_screen.dart';
+import 'package:dicoding_story_app/features/story/add/camera_screen.dart';
 import 'package:dicoding_story_app/features/story/detail/detail_story_screen.dart';
 import 'package:dicoding_story_app/features/story/list/list_story_screen.dart';
 import 'package:dicoding_story_app/main_notifier.dart';
@@ -48,6 +49,11 @@ class DicodingStoryApp extends ConsumerWidget {
           key: AddStoryScreen.valueKey,
           child: AddStoryScreen(),
         ),
+      if (mainState.cameraExists)
+        const MaterialPage(
+          key: CameraScreen.valueKey,
+          child: CameraScreen(),
+        ),
     ];
 
     final historyStack = mainState.isUserLoggedIn ? mainStack : authStack;
@@ -61,7 +67,6 @@ class DicodingStoryApp extends ConsumerWidget {
           mainNotifier.onPop();
           return route.didPop(result);
         },
-
       ),
     );
   }

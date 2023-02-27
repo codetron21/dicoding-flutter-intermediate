@@ -1,14 +1,19 @@
+import 'package:camera/camera.dart';
 import 'package:dicoding_story_app/common/preferences.dart';
 import 'package:dicoding_story_app/main_state.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class MainNotifier extends StateNotifier<MainState> {
   static final provider = StateNotifierProvider<MainNotifier, MainState>(
-      (ref) => MainNotifier(ref.read(LoginPreferences.provider)));
+    (ref) => MainNotifier(
+      ref.read(LoginPreferences.provider),
+    ),
+  );
 
   final LoginPreferences _preferences;
 
-  MainNotifier(this._preferences) : super(MainState.init()) {
+  MainNotifier(this._preferences)
+      : super(MainState.init()) {
     _init();
   }
 
@@ -44,9 +49,18 @@ class MainNotifier extends StateNotifier<MainState> {
     state = state.copy(isAddStory: true);
   }
 
+  void navigateToCamera(List<CameraDescription> cameras) {
+    state = state.copy(cameras: cameras);
+  }
+
   void onPop() {
     if (state.isRegister) {
       state = state.copy(isRegister: false);
+      return;
+    }
+
+    if (state.cameras != null) {
+      state = state.resetCamera();
       return;
     }
 

@@ -19,7 +19,8 @@ class StoriesServices {
     return StoryGetAllResponseModel.fromJson(jsonDecode(response.body));
   }
 
-  Future<StoryDetailResponseModel> getStory(String token, String storyId) async {
+  Future<StoryDetailResponseModel> getStory(String token,
+      String storyId) async {
     final endPoints = "$_baseUrl/stories/$storyId";
     final url = Uri.parse(endPoints);
     final headers = {"Authorization": "Bearer $token"};
@@ -27,5 +28,11 @@ class StoriesServices {
 
     return StoryDetailResponseModel.fromJson(jsonDecode(response.body));
   }
+
+  // Future<> addStory(String token) {
+  //   final endPoints = "$_baseUrl/stories";
+  //   final url = Uri.parse(endPoints);
+  //   final headers = {"Authorization": "Bearer $token", "Content-Type": "multipart/form-data",};
+  // }
 
 }

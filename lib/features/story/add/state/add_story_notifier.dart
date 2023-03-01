@@ -1,7 +1,5 @@
 import 'package:camera/camera.dart';
 import 'package:dicoding_story_app/features/story/add/state/add_story_state.dart';
-import 'package:dicoding_story_app/features/story/add/state/add_story_value_notifier.dart';
-import 'package:dicoding_story_app/features/story/add/state/add_story_value_state.dart';
 import 'package:dicoding_story_app/features/story/services/stories_services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

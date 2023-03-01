@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class ListStoryNotifier extends StateNotifier<ListStoryState> {
   static final provider =
-      StateNotifierProvider<ListStoryNotifier, ListStoryState>(
+      StateNotifierProvider.autoDispose<ListStoryNotifier, ListStoryState>(
     (ref) => ListStoryNotifier(ref.read(StoriesServices.provider)),
   );
 

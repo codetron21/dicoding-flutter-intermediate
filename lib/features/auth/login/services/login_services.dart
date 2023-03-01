@@ -21,6 +21,13 @@ class LoginServices {
       body: body,
     );
 
+    if (response.statusCode != 200) {
+      return LoginResponseModel(
+        error: true,
+        message: response.reasonPhrase ?? '',
+      );
+    }
+
     return LoginResponseModel.fromJson(jsonDecode(response.body));
   }
 }

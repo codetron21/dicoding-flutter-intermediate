@@ -200,6 +200,7 @@ class AddStoryState extends ConsumerState<AddStoryScreen> {
 
     final XFile? pickedFile = await picker.pickImage(
       source: ImageSource.gallery,
+      imageQuality: 50,
     );
 
     callback.call(pickedFile);

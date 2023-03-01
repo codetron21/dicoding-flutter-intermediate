@@ -50,6 +50,8 @@ class _CameraScreenState extends ConsumerState<CameraScreen>
       return;
     }
 
+    cameraController.setFlashMode(FlashMode.off);
+
     if (state == AppLifecycleState.inactive) {
       // Free up memory when camera not active
       cameraController.dispose();
@@ -128,11 +130,11 @@ class _CameraScreenState extends ConsumerState<CameraScreen>
       ResolutionPreset.low,
       enableAudio: false,
     );
+    cameraController.setFlashMode(FlashMode.off);
 
     await previousCameraController?.dispose();
 
     try {
-      cameraController.setFlashMode(FlashMode.off);
       await cameraController.initialize();
     } on CameraException catch (e) {
       print('Error initializing camera: $e');

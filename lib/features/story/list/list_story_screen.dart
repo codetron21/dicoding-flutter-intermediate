@@ -22,6 +22,10 @@ class ListStoryState extends ConsumerState<ListStoryScreen> {
   @override
   void initState() {
     super.initState();
+    _getStories();
+  }
+
+  void _getStories() {
     final sharedPref = ref.read(LoginPreferences.provider);
     sharedPref.getToken().then((token) {
       if (token == null) return;
@@ -60,7 +64,9 @@ class ListStoryState extends ConsumerState<ListStoryScreen> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: listStoryState.isLoading ? null : mainNotifier.navigateToAdd,
+        onPressed: listStoryState.isLoading ? null : () {
+          mainNotifier.navigateToAdd();
+        },
         child: const Icon(Icons.add),
       ),
       body: Stack(

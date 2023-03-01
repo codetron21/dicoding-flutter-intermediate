@@ -15,7 +15,8 @@ class MainState {
     required this.isAddStory,
   });
 
-  factory MainState.init() {
+  factory MainState.init()
+  {
     return const MainState(
         userToken: null,
         storyId: null,

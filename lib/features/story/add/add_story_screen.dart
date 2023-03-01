@@ -39,6 +39,7 @@ class AddStoryState extends ConsumerState<AddStoryScreen> {
           message: next.message,
           callback: () {
             if (next.isSuccess) {
+              mainNotifier.returnData(true);
               mainNotifier.onPop();
             }
           },

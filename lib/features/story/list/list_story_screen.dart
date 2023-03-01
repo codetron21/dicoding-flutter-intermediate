@@ -64,9 +64,15 @@ class ListStoryState extends ConsumerState<ListStoryScreen> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: listStoryState.isLoading ? null : () {
-          mainNotifier.navigateToAdd();
-        },
+        onPressed: listStoryState.isLoading
+            ? null
+            : () {
+                mainNotifier.waitForResult().then((value) {
+                  if (value) _getStories();
+                });
+
+                mainNotifier.navigateToAdd();
+              },
         child: const Icon(Icons.add),
       ),
       body: Stack(

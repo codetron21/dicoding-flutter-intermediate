@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:camera/camera.dart';
 import 'package:dicoding_story_app/common/preferences.dart';
 import 'package:dicoding_story_app/main_state.dart';
@@ -10,10 +12,11 @@ class MainNotifier extends StateNotifier<MainState> {
     ),
   );
 
+  Completer<bool> _completer = Completer();
+
   final LoginPreferences _preferences;
 
-  MainNotifier(this._preferences)
-      : super(MainState.init()) {
+  MainNotifier(this._preferences) : super(MainState.init()) {
     _init();
   }
 
@@ -51,6 +54,15 @@ class MainNotifier extends StateNotifier<MainState> {
 
   void navigateToCamera(List<CameraDescription> cameras) {
     state = state.copy(cameras: cameras);
+  }
+
+  Future<bool> waitForResult() async {
+    _completer = Completer<bool>();
+    return _completer.future;
+  }
+
+  void returnData(bool value) {
+    _completer.complete(value);
   }
 
   void onPop() {

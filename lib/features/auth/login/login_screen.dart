@@ -1,4 +1,3 @@
-import 'package:dicoding_story_app/common/widgets.dart';
 import 'package:dicoding_story_app/features/auth/login/state/login_form_notifier.dart';
 import 'package:dicoding_story_app/features/auth/login/state/login_notifier.dart';
 import 'package:dicoding_story_app/main_notifier.dart';
@@ -17,19 +16,6 @@ class LoginScreen extends ConsumerWidget {
     final loginFormNotifier = ref.read(LoginFormNotifier.provider.notifier);
     final loginState = ref.watch(LoginNotifier.provider);
     final loginNotifier = ref.watch(LoginNotifier.provider.notifier);
-
-    ref.listen(LoginNotifier.provider, (_, next) {
-      if (next.isSuccess || next.isError) {
-        confirmDialog(
-            context: context,
-            message: next.message,
-            callback: () {
-              if (next.isSuccess) {
-                mainNotifier.navigateToMain(next.token);
-              }
-            });
-      }
-    });
 
     return Scaffold(
       appBar: AppBar(

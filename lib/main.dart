@@ -1,3 +1,4 @@
+import 'package:dicoding_story_app/common/widgets/app_dialog.dart';
 import 'package:dicoding_story_app/features/auth/login/login_screen.dart';
 import 'package:dicoding_story_app/features/auth/register/register_screen.dart';
 import 'package:dicoding_story_app/features/story/add/add_story_screen.dart';
@@ -32,6 +33,13 @@ class DicodingStoryApp extends ConsumerWidget {
           key: RegisterScreen.valueKey,
           child: RegisterScreen(),
         ),
+      if (mainState.isShowDialog)
+        ConfirmDialog(
+          message: mainState.message ?? '',
+          callback: () {
+            mainNotifier.dismissDialog();
+          },
+        )
     ];
 
     final mainStack = [

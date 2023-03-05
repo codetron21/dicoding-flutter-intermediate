@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dicoding_story_app/common/preferences.dart';
-import 'package:dicoding_story_app/common/widgets.dart';
 import 'package:dicoding_story_app/features/story/list/state/list_story_notifier.dart';
 import 'package:dicoding_story_app/features/story/model/story_response_model.dart';
 import 'package:dicoding_story_app/main_notifier.dart';
@@ -38,18 +37,6 @@ class ListStoryState extends ConsumerState<ListStoryScreen> {
     final listStoryState = ref.watch(ListStoryNotifier.provider);
     final listStoryNotifier = ref.watch(ListStoryNotifier.provider.notifier);
     final mainNotifier = ref.read(MainNotifier.provider.notifier);
-
-    ref.listen(ListStoryNotifier.provider, (previous, next) {
-      if (next.showLogoutDialog) {
-        confirmOptionsDialog(
-          context: context,
-          message: "Do you want to logout?",
-          callback: () {
-            mainNotifier.navigateToAuth();
-          },
-        );
-      }
-    });
 
     return Scaffold(
       appBar: AppBar(

@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:camera/camera.dart';
 import 'package:dicoding_story_app/common/preferences.dart';
-import 'package:dicoding_story_app/common/widgets.dart';
 import 'package:dicoding_story_app/features/story/add/state/add_story_notifier.dart';
 import 'package:dicoding_story_app/features/story/add/state/add_story_value_notifier.dart';
 import 'package:dicoding_story_app/main_notifier.dart';
@@ -27,25 +26,9 @@ class AddStoryState extends ConsumerState<AddStoryScreen> {
     final addStoryValNotifier =
         ref.read(AddStoryValueNotifier.provider.notifier);
     final addStoryValState = ref.watch(AddStoryValueNotifier.provider);
-
     final addStoryState = ref.watch(AddStoryNotifier.provider);
-
     final mainNotifier = ref.read(MainNotifier.provider.notifier);
 
-    ref.listen(AddStoryNotifier.provider, (_, next) {
-      if (next.isSuccess || next.isError) {
-        confirmDialog(
-          context: context,
-          message: next.message,
-          callback: () {
-            if (next.isSuccess) {
-              mainNotifier.returnData(true);
-              mainNotifier.onPop();
-            }
-          },
-        );
-      }
-    });
 
     return Scaffold(
       appBar: AppBar(

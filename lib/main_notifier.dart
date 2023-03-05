@@ -32,7 +32,7 @@ class MainNotifier extends StateNotifier<MainState> {
 
   void navigateToMain(String? token) async {
     if (token == null) return;
-    final result = await _preferences.addToken(token);
+    final result = await _preferences.setToken(token);
     if (!result) return;
     state = state.copy(userToken: token);
   }

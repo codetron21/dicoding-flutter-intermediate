@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:camera/camera.dart';
 import 'package:dicoding_story_app/features/story/add/state/add_story_value_notifier.dart';
 import 'package:dicoding_story_app/main_notifier.dart';
@@ -137,7 +139,7 @@ class _CameraScreenState extends ConsumerState<CameraScreen>
     try {
       await cameraController.initialize();
     } on CameraException catch (e) {
-      print('Error initializing camera: $e');
+      log('camera: Error initializing camera: $e');
     }
 
     if (mounted) {

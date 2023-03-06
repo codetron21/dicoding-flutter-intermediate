@@ -1,4 +1,3 @@
-import 'package:dicoding_story_app/common/widgets.dart';
 import 'package:dicoding_story_app/features/auth/register/state/register_form_notifier.dart';
 import 'package:dicoding_story_app/features/auth/register/state/register_notifier.dart';
 import 'package:flutter/material.dart';
@@ -16,15 +15,6 @@ class RegisterScreen extends ConsumerWidget {
         ref.read(RegisterFormNotifier.provider.notifier);
     final registerState = ref.watch(RegisterNotifier.provider);
     final registerNotifier = ref.watch(RegisterNotifier.provider.notifier);
-
-    ref.listen(RegisterNotifier.provider, (_, next) {
-      if (next.isSuccess || next.isError) {
-        confirmDialog(
-          context: context,
-          message: next.message,
-        );
-      }
-    });
 
     return Scaffold(
       appBar: AppBar(

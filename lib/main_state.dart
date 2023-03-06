@@ -3,34 +3,37 @@ import 'package:camera/camera.dart';
 class MainState {
   final String? userToken;
   final String? storyId;
-  final List<CameraDescription>? cameras;
+  final String? message;
   final bool isRegister;
   final bool isAddStory;
+  final bool isShowDialog;
+  final bool isUserLoggedIn;
+  final List<CameraDescription>? cameras;
 
   const MainState({
     this.userToken,
     this.storyId,
     this.cameras,
-    required this.isRegister,
-    required this.isAddStory,
+    this.message,
+    this.isUserLoggedIn = false,
+    this.isShowDialog = false,
+    this.isRegister = false,
+    this.isAddStory = false,
   });
 
-  factory MainState.init()
-  {
-    return const MainState(
-        userToken: null,
-        storyId: null,
-        cameras: null,
-        isRegister: false,
-        isAddStory: false,);
+  factory MainState.init() {
+    return const MainState();
   }
 
   MainState copy({
     String? userToken,
     String? storyId,
-    List<CameraDescription>? cameras,
+    String? message,
     bool? isRegister,
     bool? isAddStory,
+    bool? isShowDialog,
+    bool? isUserLoggedIn,
+    List<CameraDescription>? cameras,
   }) {
     return MainState(
       userToken: userToken ?? this.userToken,
@@ -38,30 +41,27 @@ class MainState {
       cameras: cameras ?? this.cameras,
       isRegister: isRegister ?? this.isRegister,
       isAddStory: isAddStory ?? this.isAddStory,
+      isShowDialog: isShowDialog ?? this.isShowDialog,
+      isUserLoggedIn: isUserLoggedIn ?? this.isUserLoggedIn,
+      message: message,
     );
   }
 
   MainState resetMain() {
     return MainState(
       userToken: userToken,
-      storyId: null,
-      cameras: null,
-      isRegister: false,
       isAddStory: false,
+      isUserLoggedIn: true,
     );
   }
 
   MainState resetCamera() {
     return MainState(
       userToken: userToken,
-      storyId: null,
-      cameras: null,
-      isRegister: false,
       isAddStory: true,
+      isUserLoggedIn: true,
     );
   }
-
-  bool get isUserLoggedIn => userToken != null;
 
   bool get storyIdExists => storyId != null;
 

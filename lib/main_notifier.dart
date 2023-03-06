@@ -23,18 +23,19 @@ class MainNotifier extends StateNotifier<MainState> {
   void _init() async {
     String? token = await _preferences.getToken();
     if (token == null) return;
-    state = state.copy(userToken: token);
+    state = state.copy(userToken: token,isUserLoggedIn: true);
   }
 
   void navigateToRegister() {
     state = state.copy(isRegister: true);
   }
 
-  void navigateToMain(String? token) async {
+  void navigateToMain() async {
+    String? token = state.userToken;
     if (token == null) return;
     final result = await _preferences.setToken(token);
     if (!result) return;
-    state = state.copy(userToken: token);
+    state = state.copy(userToken: token, isUserLoggedIn: true);
   }
 
   void navigateToAuth() async {
@@ -56,6 +57,21 @@ class MainNotifier extends StateNotifier<MainState> {
     state = state.copy(cameras: cameras);
   }
 
+  void navigateToDialog({String? message}) {
+    state = state.copy(
+      isShowDialog: true,
+      message: message,
+    );
+  }
+
+  void setToken(String? token){
+    state = state.copy(userToken: token);
+  }
+
+  void navigateToOptionsDialog() {
+    state = state.copy();
+  }
+
   Future<bool> waitForResult() async {
     _completer = Completer<bool>();
     return _completer.future;
@@ -66,6 +82,14 @@ class MainNotifier extends StateNotifier<MainState> {
   }
 
   void onPop() {
+    if (state.isShowDialog) {
+      state = state.copy(
+        isShowDialog: false,
+        message: null,
+      );
+      return;
+    }
+
     if (state.isRegister) {
       state = state.copy(isRegister: false);
       return;

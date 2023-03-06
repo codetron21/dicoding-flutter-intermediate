@@ -12,8 +12,6 @@ class MainNotifier extends StateNotifier<MainState> {
     ),
   );
 
-  Completer<bool> _completer = Completer();
-
   final LoginPreferences _preferences;
 
   MainNotifier(this._preferences) : super(MainState.init()) {
@@ -23,7 +21,7 @@ class MainNotifier extends StateNotifier<MainState> {
   void _init() async {
     String? token = await _preferences.getToken();
     if (token == null) return;
-    state = state.copy(userToken: token,isUserLoggedIn: true);
+    state = state.copy(userToken: token, isUserLoggedIn: true);
   }
 
   void navigateToRegister() {
@@ -64,21 +62,19 @@ class MainNotifier extends StateNotifier<MainState> {
     );
   }
 
-  void setToken(String? token){
+  void setToken(String? token) {
     state = state.copy(userToken: token);
   }
 
-  void navigateToOptionsDialog() {
-    state = state.copy();
-  }
-
-  Future<bool> waitForResult() async {
-    _completer = Completer<bool>();
-    return _completer.future;
-  }
-
-  void returnData(bool value) {
-    _completer.complete(value);
+  void navigateToOptionsDialog(
+    String? message,
+    bool? commandLogout,
+  ) {
+    state = state.copy(
+      isShowConfirmDialog: true,
+      message: message,
+      commandLogout: commandLogout ?? false,
+    );
   }
 
   void onPop() {
@@ -86,6 +82,15 @@ class MainNotifier extends StateNotifier<MainState> {
       state = state.copy(
         isShowDialog: false,
         message: null,
+      );
+      return;
+    }
+
+    if (state.isShowConfirmDialog) {
+      state = state.copy(
+        isShowConfirmDialog: false,
+        message: null,
+        commandLogout: state.commandLogout ? false : false,
       );
       return;
     }

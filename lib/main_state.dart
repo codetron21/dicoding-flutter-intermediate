@@ -7,7 +7,9 @@ class MainState {
   final bool isRegister;
   final bool isAddStory;
   final bool isShowDialog;
+  final bool isShowConfirmDialog;
   final bool isUserLoggedIn;
+  final bool commandLogout;
   final List<CameraDescription>? cameras;
 
   const MainState({
@@ -15,8 +17,10 @@ class MainState {
     this.storyId,
     this.cameras,
     this.message,
+    this.commandLogout = false,
     this.isUserLoggedIn = false,
     this.isShowDialog = false,
+    this.isShowConfirmDialog = false,
     this.isRegister = false,
     this.isAddStory = false,
   });
@@ -33,6 +37,8 @@ class MainState {
     bool? isAddStory,
     bool? isShowDialog,
     bool? isUserLoggedIn,
+    bool? isShowConfirmDialog,
+    bool commandLogout = false,
     List<CameraDescription>? cameras,
   }) {
     return MainState(
@@ -43,6 +49,8 @@ class MainState {
       isAddStory: isAddStory ?? this.isAddStory,
       isShowDialog: isShowDialog ?? this.isShowDialog,
       isUserLoggedIn: isUserLoggedIn ?? this.isUserLoggedIn,
+      isShowConfirmDialog: isShowConfirmDialog ?? this.isShowConfirmDialog,
+      commandLogout: commandLogout,
       message: message,
     );
   }

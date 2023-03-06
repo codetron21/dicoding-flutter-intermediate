@@ -2,7 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dicoding_story_app/common/preferences.dart';
 import 'package:dicoding_story_app/features/story/list/state/list_story_notifier.dart';
 import 'package:dicoding_story_app/features/story/model/story_response_model.dart';
-import 'package:dicoding_story_app/main_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -36,7 +35,6 @@ class ListStoryState extends ConsumerState<ListStoryScreen> {
   Widget build(BuildContext context) {
     final listStoryState = ref.watch(ListStoryNotifier.provider);
     final listStoryNotifier = ref.watch(ListStoryNotifier.provider.notifier);
-    final mainNotifier = ref.read(MainNotifier.provider.notifier);
 
     return Scaffold(
       appBar: AppBar(
@@ -54,11 +52,7 @@ class ListStoryState extends ConsumerState<ListStoryScreen> {
         onPressed: listStoryState.isLoading
             ? null
             : () {
-                mainNotifier.waitForResult().then((value) {
-                  if (value) _getStories();
-                });
-
-                mainNotifier.navigateToAdd();
+                listStoryNotifier.onAddClicked();
               },
         child: const Icon(Icons.add),
       ),
@@ -71,7 +65,7 @@ class ListStoryState extends ConsumerState<ListStoryScreen> {
                 final story = listStoryState.model?.listStory[index];
                 if (story == null) return Container();
                 return _storyItem(context, story, callback: (storyId) {
-                  mainNotifier.navigateToDetail(storyId);
+                  listStoryNotifier.onItemClicked(storyId);
                 });
               },
               separatorBuilder: (context, index) {

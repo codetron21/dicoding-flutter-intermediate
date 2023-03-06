@@ -3,12 +3,10 @@ import 'package:dicoding_story_app/features/story/model/story_response_model.dar
 class ListStoryState {
   final bool isLoading;
   final StoryGetAllResponseModel? model;
-  final bool showLogoutDialog;
 
   const ListStoryState({
     required this.isLoading,
     this.model,
-    this.showLogoutDialog = false,
   });
 
   factory ListStoryState.init() {
@@ -31,12 +29,10 @@ class ListStoryState {
   ListStoryState copy({
     bool? isLoading,
     StoryGetAllResponseModel? model,
-    bool? showLogoutDialog,
   }) {
     return ListStoryState(
       isLoading: isLoading ?? this.isLoading,
       model: model ?? this.model,
-      showLogoutDialog: showLogoutDialog ?? this.showLogoutDialog,
     );
   }
 

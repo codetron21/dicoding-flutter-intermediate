@@ -1,4 +1,3 @@
-import 'package:dicoding_story_app/common/widgets/app_dialog.dart';
 import 'package:dicoding_story_app/features/auth/login/login_screen.dart';
 import 'package:dicoding_story_app/features/auth/register/register_screen.dart';
 import 'package:dicoding_story_app/features/dialog/dialog_screen.dart';
@@ -38,7 +37,7 @@ class DicodingStoryApp extends ConsumerWidget {
         ConfirmDialogScreen(
           message: mainState.message ?? '',
           callback: () {
-            if(mainState.userToken != null) {
+            if (mainState.userToken != null) {
               mainNotifier.navigateToMain();
             }
             mainNotifier.onPop();
@@ -65,6 +64,26 @@ class DicodingStoryApp extends ConsumerWidget {
         const MaterialPage(
           key: CameraScreen.valueKey,
           child: CameraScreen(),
+        ),
+      if (mainState.isShowDialog)
+        ConfirmDialogScreen(
+          message: mainState.message ?? '',
+          callback: () {
+            mainNotifier.onPop();
+          },
+        ),
+      if (mainState.isShowConfirmDialog)
+        ConfirmOptionsDialogScreen(
+          message: mainState.message ?? '',
+          callbackYes: () {
+            if (mainState.commandLogout) {
+              mainNotifier.navigateToAuth();
+            }
+            mainNotifier.onPop();
+          },
+          callbackNo: () {
+            mainNotifier.onPop();
+          },
         ),
     ];
 

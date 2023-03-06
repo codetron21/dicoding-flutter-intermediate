@@ -4,7 +4,6 @@ import 'package:camera/camera.dart';
 import 'package:dicoding_story_app/common/preferences.dart';
 import 'package:dicoding_story_app/features/story/add/state/add_story_notifier.dart';
 import 'package:dicoding_story_app/features/story/add/state/add_story_value_notifier.dart';
-import 'package:dicoding_story_app/main_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
@@ -27,7 +26,7 @@ class AddStoryState extends ConsumerState<AddStoryScreen> {
         ref.read(AddStoryValueNotifier.provider.notifier);
     final addStoryValState = ref.watch(AddStoryValueNotifier.provider);
     final addStoryState = ref.watch(AddStoryNotifier.provider);
-    final mainNotifier = ref.read(MainNotifier.provider.notifier);
+    final addStoryNotifier = ref.watch(AddStoryNotifier.provider.notifier);
 
 
     return Scaffold(
@@ -101,7 +100,7 @@ class AddStoryState extends ConsumerState<AddStoryScreen> {
                                     if (value == null) return;
                                     addStoryValNotifier.setImageFile(value);
                                   });
-                                  mainNotifier.navigateToCamera(cameras);
+                                  addStoryNotifier.navigateToCamera(cameras);
                                 });
                               },
                         child: const Text('Camera'),

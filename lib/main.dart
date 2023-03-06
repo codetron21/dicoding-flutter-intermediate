@@ -69,7 +69,8 @@ class DicodingStoryApp extends ConsumerWidget {
         ConfirmDialogScreen(
           message: mainState.message ?? '',
           callback: () {
-            mainNotifier.onPop();
+            mainNotifier.returnData(true);
+            mainNotifier.backToMain();
           },
         ),
       if (mainState.isShowConfirmDialog)

@@ -14,6 +14,8 @@ class MainNotifier extends StateNotifier<MainState> {
 
   final LoginPreferences _preferences;
 
+  Completer<bool> _completer = Completer();
+
   MainNotifier(this._preferences) : super(MainState.init()) {
     _init();
   }
@@ -22,6 +24,15 @@ class MainNotifier extends StateNotifier<MainState> {
     String? token = await _preferences.getToken();
     if (token == null) return;
     state = state.copy(userToken: token, isUserLoggedIn: true);
+  }
+
+  Future<bool> waitForResult() async {
+    _completer = Completer<bool>();
+    return _completer.future;
+  }
+
+  void returnData(bool value) {
+    _completer.complete(value);
   }
 
   void navigateToRegister() {
@@ -74,6 +85,14 @@ class MainNotifier extends StateNotifier<MainState> {
       isShowConfirmDialog: true,
       message: message,
       commandLogout: commandLogout ?? false,
+    );
+  }
+
+  void backToMain() {
+    state = state.copy(
+      isShowDialog: false,
+      message: null,
+      isAddStory: false,
     );
   }
 

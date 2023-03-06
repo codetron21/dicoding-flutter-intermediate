@@ -20,15 +20,7 @@ class ListStoryState extends ConsumerState<ListStoryScreen> {
   @override
   void initState() {
     super.initState();
-    _getStories();
-  }
-
-  void _getStories() {
-    final sharedPref = ref.read(LoginPreferences.provider);
-    sharedPref.getToken().then((token) {
-      if (token == null) return;
-      ref.read(ListStoryNotifier.provider.notifier).getAll(token);
-    });
+    ref.read(ListStoryNotifier.provider.notifier).getAll();
   }
 
   @override

@@ -1,6 +1,7 @@
 import 'package:dicoding_story_app/common/widgets/app_dialog.dart';
 import 'package:dicoding_story_app/features/auth/login/login_screen.dart';
 import 'package:dicoding_story_app/features/auth/register/register_screen.dart';
+import 'package:dicoding_story_app/features/dialog/dialog_screen.dart';
 import 'package:dicoding_story_app/features/story/add/add_story_screen.dart';
 import 'package:dicoding_story_app/features/story/add/camera_screen.dart';
 import 'package:dicoding_story_app/features/story/detail/detail_story_screen.dart';
@@ -34,12 +35,15 @@ class DicodingStoryApp extends ConsumerWidget {
           child: RegisterScreen(),
         ),
       if (mainState.isShowDialog)
-        ConfirmDialog(
+        ConfirmDialogScreen(
           message: mainState.message ?? '',
           callback: () {
-            mainNotifier.dismissDialog();
+            if(mainState.userToken != null) {
+              mainNotifier.navigateToMain();
+            }
+            mainNotifier.onPop();
           },
-        )
+        ),
     ];
 
     final mainStack = [

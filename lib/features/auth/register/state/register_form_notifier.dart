@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class RegisterFormNotifier extends StateNotifier<RegisterFormState> {
   static final provider =
-      StateNotifierProvider<RegisterFormNotifier, RegisterFormState>(
+      StateNotifierProvider.autoDispose<RegisterFormNotifier, RegisterFormState>(
           (ref) => RegisterFormNotifier());
 
   RegisterFormNotifier() : super(RegisterFormState.init());

@@ -1,7 +1,7 @@
 import 'package:dicoding_story_app/common/preferences.dart';
 import 'package:dicoding_story_app/features/story/list/state/list_story_state.dart';
 import 'package:dicoding_story_app/features/story/services/stories_services.dart';
-import 'package:dicoding_story_app/main_notifier.dart';
+import 'package:dicoding_story_app/main/main_notifier.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class ListStoryNotifier extends StateNotifier<ListStoryState> {
@@ -23,23 +23,34 @@ class ListStoryNotifier extends StateNotifier<ListStoryState> {
     this._services,
     this._mainNotifier,
     this._preferences,
-  ) : super(ListStoryState.init());
-
-  void getAll() async {
-    String? token = await _preferences.getToken();
-    if (token == null) return;
-    state = state.makeLoading(true);
-    final result = await _services.getAll(token);
-    state = state.getResult(result);
+  ) : super(const ListStoryState()) {
+    getAll();
   }
 
-  void onAddClicked() {
+  void getAll() async {
+    state = state.copyWith(isLoading: true);
+
+    var token = _mainNotifier.state.userToken;
+
+    if (token == null) {
+      token = await _preferences.getToken();
+      _mainNotifier.setToken(token);
+    }
+
+    if (token == null) {
+      state = state.copyWith(isLoading: false);
+      return;
+    }
+
+    final result = await _services.getAll(token);
+    state = state.copyWith(model: result, isLoading: false);
+  }
+
+  void onAddClicked() async {
     _mainNotifier.navigateToAdd();
-    _mainNotifier.waitForResult().then((value) {
-      final token = _mainNotifier.state.userToken;
-      if (token == null) return;
-      getAll();
-    });
+    final result = await _mainNotifier.waitForResult();
+    if (!result) return;
+    getAll();
   }
 
   void onItemClicked(String storyId) {

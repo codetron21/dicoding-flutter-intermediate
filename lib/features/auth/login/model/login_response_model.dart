@@ -1,6 +1,15 @@
+import 'package:dicoding_story_app/features/auth/login/model/login_result.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+part 'login_response_model.g.dart';
+
+@JsonSerializable()
 class LoginResponseModel {
+  @JsonKey(name: 'error')
   final bool error;
+  @JsonKey(name: 'message')
   final String message;
+  @JsonKey(name: 'loginResult')
   final LoginResult? result;
 
   const LoginResponseModel({
@@ -9,31 +18,6 @@ class LoginResponseModel {
     this.result,
   });
 
-  factory LoginResponseModel.fromJson(Map<String, dynamic> json) {
-    return LoginResponseModel(
-      error: json['error'],
-      message: json['message'],
-      result: LoginResult.fromJson(json['loginResult']),
-    );
-  }
-}
-
-class LoginResult {
-  final String userId;
-  final String name;
-  final String token;
-
-  const LoginResult({
-    required this.userId,
-    required this.name,
-    required this.token,
-  });
-
-  factory LoginResult.fromJson(Map<String, dynamic> json) {
-    return LoginResult(
-      userId: json['userId'],
-      name: json['name'],
-      token: json['token'],
-    );
-  }
+  factory LoginResponseModel.fromJson(Map<String, dynamic> json) =>
+      _$LoginResponseModelFromJson(json);
 }

@@ -14,7 +14,7 @@ class RegisterScreen extends ConsumerWidget {
     final registerFormNotifier =
         ref.read(RegisterFormNotifier.provider.notifier);
     final registerState = ref.watch(RegisterNotifier.provider);
-    final registerNotifier = ref.watch(RegisterNotifier.provider.notifier);
+    final registerNotifier = ref.read(RegisterNotifier.provider.notifier);
 
     return Scaffold(
       appBar: AppBar(
@@ -153,19 +153,14 @@ class RegisterScreen extends ConsumerWidget {
                   onPressed: registerState.isLoading
                       ? null
                       : () {
-                          final result =
-                              registerFormNotifier.onRegisterPressed();
-                          if (!result) return;
-
-                          final name = registerFormState.name;
-                          final email = registerFormState.email;
-                          final password = registerFormState.password;
-
-                          registerNotifier.onRegisterPressed(
-                            name: name,
-                            email: email,
-                            password: password,
-                          );
+                          registerFormNotifier
+                              .onRegisterPressed((name, email, password) {
+                            registerNotifier.onRegister(
+                              name: name,
+                              email: email,
+                              password: password,
+                            );
+                          });
                         },
                   child: const Text('Register'),
                 ),

@@ -1,73 +1,24 @@
+import 'dart:developer';
+
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:intl/intl.dart';
 
-class StoryAddResponseModel {
-  final bool error;
-  final String message;
+part 'story_response_model.g.dart';
 
-  const StoryAddResponseModel({
-    required this.error,
-    required this.message,
-  });
-
-  factory StoryAddResponseModel.fromJson(Map<String, dynamic> json) {
-    return StoryAddResponseModel(
-      error: json['error'],
-      message: json['message'],
-    );
-  }
-}
-
-class StoryGetAllResponseModel {
-  final bool error;
-  final String message;
-  final List<Story> listStory;
-
-  const StoryGetAllResponseModel({
-    required this.error,
-    required this.message,
-    required this.listStory,
-  });
-
-  factory StoryGetAllResponseModel.fromJson(Map<String, dynamic> json) {
-    List<Story> stories =
-        (json['listStory'] as List).map((e) => Story.fromJson(e)).toList();
-
-    return StoryGetAllResponseModel(
-      error: json['error'],
-      message: json['message'],
-      listStory: stories,
-    );
-  }
-}
-
-class StoryDetailResponseModel {
-  final bool error;
-  final String message;
-  final Story story;
-
-  StoryDetailResponseModel({
-    required this.error,
-    required this.message,
-    required this.story,
-  });
-
-  factory StoryDetailResponseModel.fromJson(Map<String, dynamic> json) {
-    return StoryDetailResponseModel(
-      error: json['error'],
-      message: json['message'],
-      story: Story.fromJson(json['story']),
-    );
-  }
-}
-
-class Story {
+@JsonSerializable()
+class StoryResponseModel {
+  @JsonKey(name: 'id')
   final String id;
+  @JsonKey(name: 'name')
   final String name;
+  @JsonKey(name: 'description')
   final String description;
+  @JsonKey(name: 'photoUrl')
   final String photoUrl;
+  @JsonKey(name: 'createdAt',fromJson: _dateFromJson)
   final String createdAt;
 
-  const Story({
+  const StoryResponseModel({
     required this.id,
     required this.name,
     required this.description,
@@ -75,17 +26,12 @@ class Story {
     required this.createdAt,
   });
 
-  factory Story.fromJson(Map<String, dynamic> json) {
-    String createdAt = json['createdAt'];
-    DateTime dateTime = DateTime.parse(createdAt);
-    String date = DateFormat('dd-MM-yyyy kk:mm').format(dateTime);
+  factory StoryResponseModel.fromJson(Map<String, dynamic> json) =>
+      _$StoryResponseModelFromJson(json);
 
-    return Story(
-      id: json['id'],
-      name: json['name'],
-      description: json['description'],
-      photoUrl: json['photoUrl'],
-      createdAt: date,
-    );
+  static String _dateFromJson(String date){
+    DateTime dateTime = DateTime.parse(date);
+    return DateFormat('dd-MM-yyyy kk:mm').format(dateTime);
   }
+
 }

@@ -1,32 +1,18 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:dicoding_story_app/common/preferences.dart';
 import 'package:dicoding_story_app/features/story/list/state/list_story_notifier.dart';
 import 'package:dicoding_story_app/features/story/model/story_response_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class ListStoryScreen extends ConsumerStatefulWidget {
+class ListStoryScreen extends ConsumerWidget {
   static const valueKey = ValueKey('ListStoryScreen');
 
   const ListStoryScreen({super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() {
-    return ListStoryState();
-  }
-}
-
-class ListStoryState extends ConsumerState<ListStoryScreen> {
-  @override
-  void initState() {
-    super.initState();
-    ref.read(ListStoryNotifier.provider.notifier).getAll();
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final listStoryState = ref.watch(ListStoryNotifier.provider);
-    final listStoryNotifier = ref.watch(ListStoryNotifier.provider.notifier);
+    final listStoryNotifier = ref.read(ListStoryNotifier.provider.notifier);
 
     return Scaffold(
       appBar: AppBar(
@@ -50,15 +36,18 @@ class ListStoryState extends ConsumerState<ListStoryScreen> {
       ),
       body: Stack(
         children: [
-          if (listStoryState.isSuccess)
+          if (!listStoryState.isError)
             ListView.separated(
               padding: const EdgeInsets.all(8),
               itemBuilder: (context, index) {
                 final story = listStoryState.model?.listStory[index];
                 if (story == null) return Container();
-                return _storyItem(context, story, callback: (storyId) {
-                  listStoryNotifier.onItemClicked(storyId);
-                });
+                return _StoryItem(
+                  story: story,
+                  callback: (storyId) {
+                    listStoryNotifier.onItemClicked(storyId);
+                  },
+                );
               },
               separatorBuilder: (context, index) {
                 return const SizedBox(height: 8);
@@ -86,9 +75,20 @@ class ListStoryState extends ConsumerState<ListStoryScreen> {
       ),
     );
   }
+}
 
-  Widget _storyItem(BuildContext context, Story story,
-      {Function(String)? callback}) {
+class _StoryItem extends StatelessWidget {
+  final StoryResponseModel story;
+  final Function(String)? callback;
+
+  const _StoryItem({
+    Key? key,
+    required this.story,
+    this.callback,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
     return Card(
       clipBehavior: Clip.antiAliasWithSaveLayer,
       child: InkWell(

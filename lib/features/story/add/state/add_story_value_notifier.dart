@@ -11,19 +11,17 @@ class AddStoryValueNotifier extends StateNotifier<AddStoryValueState> {
 
   Completer<XFile?>? _completer;
 
-  AddStoryValueNotifier() : super(AddStoryValueState.init());
+  AddStoryValueNotifier() : super(const AddStoryValueState());
 
   void setImageFile(XFile? imageFile) {
-    state = state.copy(
-      imageFile: imageFile,
-    );
+    state = state.copyWith(imageFile: imageFile);
 
     if (imageFile == null) {
-      state = state.copy(messageImageError: "Please add a photo");
+      state = state.copyWith(messageImageError: "Please add a photo");
       return;
     }
 
-    state = state.removeImageError();
+    state = state.copyWith(messageImageError: "");
   }
 
   Future<XFile?> waitForResult() async {
@@ -36,14 +34,14 @@ class AddStoryValueNotifier extends StateNotifier<AddStoryValueState> {
   }
 
   void onDescriptionOnChanged(String value) {
-    state = state.copy(description: value);
+    state = state.copyWith(description: value);
 
     if (value.isEmpty) {
-      state = state.copy(messageDescError: "Description can't be empty.");
+      state = state.copyWith(messageDescError: "Description can't be empty.");
       return;
     }
 
-    state = state.removeDescError();
+    state = state.copyWith(messageDescError: "");
   }
 
   bool onButtonAddPressed() {

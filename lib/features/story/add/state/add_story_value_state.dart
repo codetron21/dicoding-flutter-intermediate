@@ -1,43 +1,20 @@
 import 'package:camera/camera.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class AddStoryValueState {
-  final XFile? imageFile;
-  final String description;
-  final String messageDescError;
-  final String messageImageError;
+part 'add_story_value_state.freezed.dart';
 
-  const AddStoryValueState({
-    this.imageFile,
-    this.description = "",
-    this.messageDescError = "",
-    this.messageImageError = "",
-  });
+@freezed
+@immutable
+class AddStoryValueState with _$AddStoryValueState{
 
-  factory AddStoryValueState.init() {
-    return const AddStoryValueState();
-  }
+  const AddStoryValueState._();
 
-  AddStoryValueState copy({
+  const factory AddStoryValueState({
     XFile? imageFile,
-    String? description,
-    String? messageDescError,
-    String? messageImageError,
-  }) {
-    return AddStoryValueState(
-      imageFile: imageFile ?? this.imageFile,
-      description: description ?? this.description,
-      messageDescError: messageDescError ?? this.messageDescError,
-      messageImageError: messageImageError ?? this.messageImageError,
-    );
-  }
-
-  AddStoryValueState removeImageError() {
-    return copy(messageImageError: "");
-  }
-
-  AddStoryValueState removeDescError() {
-    return copy(messageDescError: "");
-  }
+    @Default('') String description,
+    @Default('') String messageDescError,
+    @Default('') String messageImageError,
+  }) = _AddStoryValueState;
 
   String? get imagePath => imageFile?.path;
 

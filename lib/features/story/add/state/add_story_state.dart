@@ -1,52 +1,26 @@
-import 'package:dicoding_story_app/features/story/model/story_response_model.dart';
+import 'package:dicoding_story_app/features/story/add/model/story_add_response_model.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class AddStoryState {
-  final bool isLoading;
-  final StoryAddResponseModel? response;
+part 'add_story_state.freezed.dart';
 
-  const AddStoryState({
-    required this.isLoading,
-    this.response,
-  });
+@freezed
+@immutable
+class AddStoryState with _$AddStoryState{
+  const AddStoryState._();
 
-  factory AddStoryState.init() {
-    return const AddStoryState(isLoading: false);
-  }
+  const factory AddStoryState({
+    @Default(false) bool isLoading,
+    StoryAddResponseModel? model,
+  }) = _AddStoryState;
 
-  bool get isError => response?.error ?? false;
+  bool get isError => model?.error ?? false;
 
-  bool get isSuccess => !(response?.error ?? true);
+  String get message => model?.message ?? "";
 
-  String get message => response?.message ?? "";
-
-  AddStoryState copy({
-    bool? isLoading,
-    StoryAddResponseModel? response,
-  }) {
-    return AddStoryState(
-      isLoading: isLoading ?? this.isLoading,
-      response: response ?? this.response,
-    );
-  }
-
-  AddStoryState makeLoading(bool loading) {
-    return AddStoryState(
-      isLoading: loading,
-      response: null,
-    );
-  }
-
-  AddStoryState getResult(StoryAddResponseModel response) {
+  factory AddStoryState.makeError(String message) {
     return AddStoryState(
       isLoading: false,
-      response: response,
-    );
-  }
-
-  AddStoryState makeError(String message) {
-    return AddStoryState(
-      isLoading: false,
-      response: StoryAddResponseModel(
+      model: StoryAddResponseModel(
         error: true,
         message: message,
       ),

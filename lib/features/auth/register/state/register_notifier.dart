@@ -1,7 +1,7 @@
 import 'package:dicoding_story_app/features/auth/register/model/register_request_model.dart';
 import 'package:dicoding_story_app/features/auth/register/services/register_services.dart';
 import 'package:dicoding_story_app/features/auth/register/state/register_state.dart';
-import 'package:dicoding_story_app/main_notifier.dart';
+import 'package:dicoding_story_app/main/main_notifier.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class RegisterNotifier extends StateNotifier<RegisterState> {
@@ -25,14 +25,14 @@ class RegisterNotifier extends StateNotifier<RegisterState> {
     required mainNotifier,
   })  : _services = services,
         _mainNotifier = mainNotifier,
-        super(RegisterState.init());
+        super(const RegisterState());
 
-  void onRegisterPressed({
+  void onRegister({
     required String name,
     required String email,
     required String password,
   }) async {
-    state = state.makeLoading(true);
+    state = state.copyWith(isLoading: true);
 
     final model = RegisterRequestModel(
       name: name,
@@ -42,10 +42,10 @@ class RegisterNotifier extends StateNotifier<RegisterState> {
 
     try {
       final result = await _services.register(model);
-      state = state.getResult(result);
+      state = state.copyWith(isLoading: false, model: result);
       _mainNotifier.navigateToDialog(message: state.message);
     } catch (err) {
-      state = state.makeError("$err");
+      state = RegisterState.makeError("$err");
     }
   }
 }

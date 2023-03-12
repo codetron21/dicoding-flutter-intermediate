@@ -5,9 +5,12 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class RegisterServices {
-  static final provider = Provider((ref) => RegisterServices());
+  static final provider = Provider((ref) => RegisterServices.instance);
+  static final instance = RegisterServices._();
 
   final String _baseUrl = 'https://story-api.dicoding.dev/v1/register';
+
+  RegisterServices._();
 
   Future<RegisterResponseModel> register(RegisterRequestModel model) async {
     final url = Uri.parse(_baseUrl);

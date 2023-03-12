@@ -1,36 +1,21 @@
-import 'package:dicoding_story_app/features/story/model/story_response_model.dart';
+import 'package:dicoding_story_app/features/story/detail/model/story_detail_response_model.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class DetailStoryState {
-  final bool isLoading;
-  final StoryDetailResponseModel? model;
+part 'detail_story_state.freezed.dart';
 
-  const DetailStoryState({
-    required this.isLoading,
-    this.model,
-  });
+@freezed
+@immutable
+class DetailStoryState with _$DetailStoryState {
+  const DetailStoryState._();
 
-  factory DetailStoryState.init() {
-    return const DetailStoryState(isLoading: false);
-  }
+  const factory DetailStoryState({
+    @Default(false) bool isLoading,
+    StoryDetailResponseModel? model,
+  }) = _DetailStoryState;
 
   String get message => model?.message ?? "";
 
   bool get isError => model?.error ?? false;
 
   bool get isSuccess => !(model?.error ?? true);
-
-  DetailStoryState makeLoading(bool loading) {
-    return DetailStoryState(
-      isLoading: loading,
-      model: null,
-    );
-  }
-
-  DetailStoryState getResult(StoryDetailResponseModel model) {
-    return DetailStoryState(
-      isLoading: false,
-      model: model,
-    );
-  }
-
 }

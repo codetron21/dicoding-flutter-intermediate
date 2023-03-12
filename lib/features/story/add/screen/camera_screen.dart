@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:camera/camera.dart';
 import 'package:dicoding_story_app/features/story/add/state/add_story_value_notifier.dart';
-import 'package:dicoding_story_app/main_notifier.dart';
+import 'package:dicoding_story_app/main/main_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -51,8 +51,6 @@ class _CameraScreenState extends ConsumerState<CameraScreen>
     if (cameraController == null || !cameraController.value.isInitialized) {
       return;
     }
-
-    cameraController.setFlashMode(FlashMode.off);
 
     if (state == AppLifecycleState.inactive) {
       // Free up memory when camera not active
@@ -108,6 +106,7 @@ class _CameraScreenState extends ConsumerState<CameraScreen>
 
   void _onCameraSwitch() {
     final cameras = ref.read(MainNotifier.provider).cameras;
+
     if (cameras == null) return;
 
     if (cameras.length == 1) return;
@@ -132,7 +131,6 @@ class _CameraScreenState extends ConsumerState<CameraScreen>
       ResolutionPreset.low,
       enableAudio: false,
     );
-    cameraController.setFlashMode(FlashMode.off);
 
     await previousCameraController?.dispose();
 

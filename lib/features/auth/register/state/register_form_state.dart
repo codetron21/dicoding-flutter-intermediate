@@ -1,36 +1,24 @@
-class RegisterFormState {
-  final String name;
-  final String email;
-  final String password;
-  final String confirmPassword;
-  final String messageNameError;
-  final String messageEmailError;
-  final String messagePasswordError;
-  final String messagePasswordConfirmError;
-  final bool isPasswordVisible;
-  final bool isPasswordConfirmVisible;
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-  const RegisterFormState({
-    required this.name,
-    required this.email,
-    required this.password,
-    required this.confirmPassword,
-    this.messageNameError = "",
-    this.messageEmailError = "",
-    this.messagePasswordError = "",
-    this.messagePasswordConfirmError = "",
-    this.isPasswordVisible = false,
-    this.isPasswordConfirmVisible = false,
-  });
+part 'register_form_state.freezed.dart';
 
-  factory RegisterFormState.init() {
-    return const RegisterFormState(
-      name: "",
-      email: "",
-      password: "",
-      confirmPassword: "",
-    );
-  }
+@freezed
+@immutable
+class RegisterFormState with _$RegisterFormState {
+  const RegisterFormState._();
+
+  const factory RegisterFormState({
+    @Default('') String name,
+    @Default('') String email,
+    @Default('') String password,
+    @Default('') String confirmPassword,
+    @Default('') String messageNameError,
+    @Default('') String messageEmailError,
+    @Default('') String messagePasswordError,
+    @Default('') String messagePasswordConfirmError,
+    @Default(false) bool isPasswordVisible,
+    @Default(false) bool isPasswordConfirmVisible,
+  }) = _RegisterFormState;
 
   bool get isEmailError => messageEmailError.isNotEmpty;
 
@@ -40,53 +28,9 @@ class RegisterFormState {
 
   bool get isNameError => messageNameError.isNotEmpty;
 
-  RegisterFormState copy({
-    String? name,
-    String? email,
-    String? password,
-    String? confirmPassword,
-    String? messageNameError,
-    String? messageEmailError,
-    String? messagePasswordError,
-    String? messagePasswordConfirmError,
-    bool? isPasswordVisible,
-    bool? isPasswordConfirmVisible,
-  }) {
-    return RegisterFormState(
-      name: name ?? this.name,
-      email: email ?? this.email,
-      password: password ?? this.password,
-      confirmPassword: confirmPassword ?? this.confirmPassword,
-      messageNameError: messageNameError ?? this.messageNameError,
-      messageEmailError: messageEmailError ?? this.messageEmailError,
-      messagePasswordError: messagePasswordError ?? this.messagePasswordError,
-      messagePasswordConfirmError:
-          messagePasswordConfirmError ?? this.messagePasswordConfirmError,
-      isPasswordVisible: isPasswordVisible ?? this.isPasswordVisible,
-      isPasswordConfirmVisible:
-          isPasswordConfirmVisible ?? this.isPasswordConfirmVisible,
-    );
-  }
-
   bool get hasErrors =>
       name.isEmpty ||
       email.isEmpty ||
       password.isEmpty ||
       confirmPassword.isEmpty;
-
-  RegisterFormState removeNameError() {
-    return copy(messageNameError: "");
-  }
-
-  RegisterFormState removeEmailError() {
-    return copy(messageEmailError: "");
-  }
-
-  RegisterFormState removePasswordError() {
-    return copy(messagePasswordError: "");
-  }
-
-  RegisterFormState removePasswordConfirmError() {
-    return copy(messagePasswordConfirmError: "");
-  }
 }

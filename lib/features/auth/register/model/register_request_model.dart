@@ -1,6 +1,14 @@
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+part 'register_request_model.g.dart';
+
+@JsonSerializable()
 class RegisterRequestModel {
+  @JsonKey(name: 'name')
   final String name;
+  @JsonKey(name: 'email')
   final String email;
+  @JsonKey(name: 'password')
   final String password;
 
   const RegisterRequestModel({
@@ -9,11 +17,5 @@ class RegisterRequestModel {
     required this.password,
   });
 
-  Map<String, dynamic> toJson() {
-    return {
-      'name': name,
-      'email': email,
-      'password': password,
-    };
-  }
+  Map<String, dynamic> toJson() => _$RegisterRequestModelToJson(this);
 }

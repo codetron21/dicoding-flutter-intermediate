@@ -1,49 +1,25 @@
-class LoginFormState {
-  final String email;
-  final String password;
-  final String messageEmailError;
-  final String messagePasswordError;
-  final bool isPasswordVisible;
 
-  const LoginFormState({
-    required this.email,
-    required this.password,
-    this.messageEmailError = "",
-    this.messagePasswordError = "",
-    this.isPasswordVisible = false,
-  });
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-  factory LoginFormState.init() {
-    return const LoginFormState(email: "", password: "");
-  }
+part 'login_form_state.freezed.dart';
+
+@freezed
+@immutable
+class LoginFormState with _$LoginFormState {
+  const LoginFormState._();
+
+  const factory LoginFormState({
+    @Default('') String email,
+    @Default('') String password,
+    @Default('') String messageEmailError,
+    @Default('') String messagePasswordError,
+    @Default(false) bool isPasswordVisible,
+  }) = _LoginFormState;
 
   bool get isEmailError => messageEmailError.isNotEmpty;
 
   bool get isPasswordError => messagePasswordError.isNotEmpty;
 
-  LoginFormState copy({
-    String? email,
-    String? password,
-    String? messageEmailError,
-    String? messagePasswordError,
-    bool? isPasswordVisible,
-  }) {
-    return LoginFormState(
-      email: email ?? this.email,
-      password: password ?? this.password,
-      messageEmailError: messageEmailError ?? this.messageEmailError,
-      messagePasswordError: messagePasswordError ?? this.messagePasswordError,
-      isPasswordVisible: isPasswordVisible ?? this.isPasswordVisible,
-    );
-  }
-
   bool get hasErrors => email.isEmpty || password.isEmpty;
 
-  LoginFormState removeEmailError() {
-    return copy(messageEmailError: "");
-  }
-
-  LoginFormState removePasswordError() {
-    return copy(messagePasswordError: "");
-  }
 }

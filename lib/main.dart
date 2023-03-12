@@ -1,11 +1,11 @@
-import 'package:dicoding_story_app/features/auth/login/login_screen.dart';
-import 'package:dicoding_story_app/features/auth/register/register_screen.dart';
-import 'package:dicoding_story_app/features/dialog/dialog_screen.dart';
-import 'package:dicoding_story_app/features/story/add/add_story_screen.dart';
-import 'package:dicoding_story_app/features/story/add/camera_screen.dart';
-import 'package:dicoding_story_app/features/story/detail/detail_story_screen.dart';
-import 'package:dicoding_story_app/features/story/list/list_story_screen.dart';
-import 'package:dicoding_story_app/main_notifier.dart';
+import 'package:dicoding_story_app/features/auth/login/screen/login_screen.dart';
+import 'package:dicoding_story_app/features/auth/register/screen/register_screen.dart';
+import 'package:dicoding_story_app/features/dialog/screen/dialog_screen.dart';
+import 'package:dicoding_story_app/features/story/add/screen/add_story_screen.dart';
+import 'package:dicoding_story_app/features/story/add/screen/camera_screen.dart';
+import 'package:dicoding_story_app/features/story/detail/screen/detail_story_screen.dart';
+import 'package:dicoding_story_app/features/story/list/screen/list_story_screen.dart';
+import 'package:dicoding_story_app/main/main_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -69,8 +69,9 @@ class DicodingStoryApp extends ConsumerWidget {
         ConfirmDialogScreen(
           message: mainState.message ?? '',
           callback: () {
-            mainNotifier.returnData(true);
-            mainNotifier.backToMain();
+            mainNotifier
+              ..returnData(true)
+              ..backToMain();
           },
         ),
       if (mainState.isShowConfirmDialog)

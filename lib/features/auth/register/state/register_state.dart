@@ -1,58 +1,29 @@
 import 'package:dicoding_story_app/features/auth/register/model/register_response_model.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class RegisterState {
-  final RegisterResponseModel? response;
-  final bool isLoading;
+part 'register_state.freezed.dart';
 
-  const RegisterState({
-    this.response,
-    this.isLoading = false,
-  });
+@freezed
+@immutable
+class RegisterState with _$RegisterState {
+  const RegisterState._();
 
-  factory RegisterState.init() {
-    return const RegisterState(
-      response: null,
-      isLoading: false,
-    );
-  }
+  const factory RegisterState({
+    RegisterResponseModel? model,
+    @Default(false) bool isLoading,
+  }) = _RegisterState;
 
-  bool get isError => response?.error ?? false;
+  bool get isError => model?.error ?? false;
 
-  bool get isSuccess => !(response?.error ?? true);
+  String get message => model?.message ?? "";
 
-  String get message => response?.message ?? "";
-
-  RegisterState copy({
-    RegisterResponseModel? response,
-    bool? isLoading,
-  }) {
-    return RegisterState(
-      response: response ?? this.response,
-      isLoading: isLoading ?? this.isLoading,
-    );
-  }
-
-  RegisterState makeLoading(bool loading) {
-    return RegisterState(
-      isLoading: loading,
-      response: null,
-    );
-  }
-
-  RegisterState makeError(String message) {
+  factory RegisterState.makeError(String message) {
     return RegisterState(
       isLoading: false,
-      response: RegisterResponseModel(
+      model: RegisterResponseModel(
         error: true,
         message: message,
       ),
-    );
-  }
-
-  RegisterState getResult(RegisterResponseModel model) {
-    return RegisterState(
-      isLoading: false,
-      response: model,
     );
   }
 }

@@ -6,9 +6,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 
 class LoginServices {
-  static final provider = Provider((ref) => LoginServices());
+  static final provider = Provider((ref) => LoginServices.instance);
+  static final LoginServices instance = LoginServices._();
 
   final _baseUrl = "https://story-api.dicoding.dev/v1/login";
+
+  LoginServices._();
 
   Future<LoginResponseModel> login(LoginRequestModel model) async {
     final url = Uri.parse(_baseUrl);

@@ -13,7 +13,7 @@ class LoginScreen extends ConsumerWidget {
     final loginFormState = ref.watch(LoginFormNotifier.provider);
     final loginFormNotifier = ref.read(LoginFormNotifier.provider.notifier);
     final loginState = ref.watch(LoginNotifier.provider);
-    final loginNotifier = ref.watch(LoginNotifier.provider.notifier);
+    final loginNotifier = ref.read(LoginNotifier.provider.notifier);
 
     return Scaffold(
       appBar: AppBar(
@@ -41,14 +41,14 @@ class LoginScreen extends ConsumerWidget {
                   keyboardType: TextInputType.emailAddress,
                   onChanged: loginFormNotifier.onEmailChanged,
                 ),
-                if(loginFormState.isEmailError)
-                    Text(
-                        loginFormState.messageEmailError,
-                        style: const TextStyle(
-                          color: Colors.red,
-                          fontSize: 12,
-                        ),
-                ),
+                if (loginFormState.isEmailError)
+                  Text(
+                    loginFormState.messageEmailError,
+                    style: const TextStyle(
+                      color: Colors.red,
+                      fontSize: 12,
+                    ),
+                  ),
                 const SizedBox(height: 8),
                 const Text(
                   'Password',
@@ -75,29 +75,25 @@ class LoginScreen extends ConsumerWidget {
                   obscureText: !loginFormState.isPasswordVisible,
                   onChanged: loginFormNotifier.onPasswordChanged,
                 ),
-                if(loginFormState.isPasswordError)
-                     Text(
-                        loginFormState.messagePasswordError,
-                        style: const TextStyle(
-                          color: Colors.red,
-                          fontSize: 12,
-                        ),
-                      ),
+                if (loginFormState.isPasswordError)
+                  Text(
+                    loginFormState.messagePasswordError,
+                    style: const TextStyle(
+                      color: Colors.red,
+                      fontSize: 12,
+                    ),
+                  ),
                 const SizedBox(height: 8),
                 ElevatedButton(
                   onPressed: loginState.isLoading
                       ? null
                       : () {
-                          final result = loginFormNotifier.onLoginPressed();
-                          if (!result) return;
-
-                          final email = loginFormState.email;
-                          final password = loginFormState.password;
-
-                          loginNotifier.onLoginPressed(
-                            email: email,
-                            password: password,
-                          );
+                          loginFormNotifier.onLoginPressed((email, password) {
+                            loginNotifier.onLogin(
+                              email: email,
+                              password: password,
+                            );
+                          });
                         },
                   child: const Text('Login'),
                 ),
@@ -105,7 +101,7 @@ class LoginScreen extends ConsumerWidget {
                   onPressed: loginState.isLoading
                       ? null
                       : () {
-                            loginNotifier.navigateToRegister();
+                          loginNotifier.navigateToRegister();
                         },
                   child: const Text('Register'),
                 ),

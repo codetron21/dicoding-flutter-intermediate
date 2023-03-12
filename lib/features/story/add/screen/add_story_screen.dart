@@ -28,7 +28,6 @@ class AddStoryState extends ConsumerState<AddStoryScreen> {
     final addStoryState = ref.watch(AddStoryNotifier.provider);
     final addStoryNotifier = ref.watch(AddStoryNotifier.provider.notifier);
 
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Add Story'),
@@ -92,16 +91,13 @@ class AddStoryState extends ConsumerState<AddStoryScreen> {
                       child: ElevatedButton(
                         onPressed: addStoryState.isLoading
                             ? null
-                            : () {
-                                availableCameras().then((cameras) {
-                                  addStoryValNotifier
-                                      .waitForResult()
-                                      .then((value) {
-                                    if (value == null) return;
-                                    addStoryValNotifier.setImageFile(value);
-                                  });
-                                  addStoryNotifier.navigateToCamera(cameras);
-                                });
+                            : () async {
+                                final cameras = await availableCameras();
+                                addStoryNotifier.navigateToCamera(cameras);
+
+                                final image =
+                                    await addStoryValNotifier.waitForResult();
+                                addStoryValNotifier.setImageFile(image);
                               },
                         child: const Text('Camera'),
                       ),

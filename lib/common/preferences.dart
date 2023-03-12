@@ -2,9 +2,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPreferences {
-  static final provider = Provider((ref) => LoginPreferences());
+  static final provider = Provider((ref) => LoginPreferences.instance);
+
+  static final LoginPreferences instance = LoginPreferences._();
 
   final String _keyToken = "KEY_TOKEN";
+
+  LoginPreferences._();
 
   Future<String?> getToken() async {
     final preferences = await SharedPreferences.getInstance();

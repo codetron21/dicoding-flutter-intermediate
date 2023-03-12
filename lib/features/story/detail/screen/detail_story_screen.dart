@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dicoding_story_app/common/preferences.dart';
 import 'package:dicoding_story_app/features/story/detail/state/detail_story_notifier.dart';
-import 'package:dicoding_story_app/main_notifier.dart';
+import 'package:dicoding_story_app/main/main_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

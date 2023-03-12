@@ -1,7 +1,7 @@
 import 'package:camera/camera.dart';
 import 'package:dicoding_story_app/features/story/add/state/add_story_state.dart';
 import 'package:dicoding_story_app/features/story/services/stories_services.dart';
-import 'package:dicoding_story_app/main_notifier.dart';
+import 'package:dicoding_story_app/main/main_notifier.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class AddStoryNotifier extends StateNotifier<AddStoryState> {
@@ -20,7 +20,7 @@ class AddStoryNotifier extends StateNotifier<AddStoryState> {
   AddStoryNotifier(
     this._services,
     this._mainNotifier,
-  ) : super(AddStoryState.init());
+  ) : super(const AddStoryState());
 
   void navigateToCamera(List<CameraDescription> cameras) {
     _mainNotifier.navigateToCamera(cameras);
@@ -30,15 +30,15 @@ class AddStoryNotifier extends StateNotifier<AddStoryState> {
     final fileName = file.name;
     final bytes = await file.readAsBytes();
 
-    state = state.makeLoading(true);
+    state = state.copyWith(isLoading: true);
 
     try {
       final result =
           await _services.addStory(token, bytes, fileName, description);
-      state = state.getResult(result);
+      state = state.copyWith(isLoading: false, model: result);
       _mainNotifier.navigateToDialog(message: state.message);
     } catch (err) {
-      state = state.makeError("$err");
+      state = AddStoryState.makeError("$err");
     }
   }
 }

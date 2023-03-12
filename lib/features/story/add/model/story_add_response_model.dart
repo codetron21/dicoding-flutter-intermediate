@@ -1,19 +1,19 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-part 'register_response_model.g.dart';
+part 'story_add_response_model.g.dart';
 
 @JsonSerializable()
-class RegisterResponseModel {
+class StoryAddResponseModel {
   @JsonKey(name: 'error')
   final bool error;
   @JsonKey(name: 'message')
   final String message;
 
-  const RegisterResponseModel({
+  const StoryAddResponseModel({
     required this.error,
     required this.message,
   });
 
-  factory RegisterResponseModel.fromJson(Map<String, dynamic> json) =>
-      _$RegisterResponseModelFromJson(json);
+  factory StoryAddResponseModel.fromJson(Map<String,dynamic> json)=>_$StoryAddResponseModelFromJson(json);
+
 }

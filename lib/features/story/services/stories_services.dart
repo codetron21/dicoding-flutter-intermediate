@@ -1,6 +1,8 @@
 import 'dart:convert';
 
-import 'package:dicoding_story_app/features/story/model/story_response_model.dart';
+import 'package:dicoding_story_app/features/story/add/model/story_add_response_model.dart';
+import 'package:dicoding_story_app/features/story/detail/model/story_detail_response_model.dart';
+import 'package:dicoding_story_app/features/story/list/model/story_get_all_response_model.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;

@@ -1,45 +1,19 @@
-import 'package:dicoding_story_app/features/story/model/story_response_model.dart';
+import 'package:dicoding_story_app/features/story/list/model/story_get_all_response_model.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class ListStoryState {
-  final bool isLoading;
-  final StoryGetAllResponseModel? model;
+part 'list_story_state.freezed.dart';
 
-  const ListStoryState({
-    required this.isLoading,
-    this.model,
-  });
+@freezed
+@immutable
+class ListStoryState with _$ListStoryState {
+  const ListStoryState._();
 
-  factory ListStoryState.init() {
-    return const ListStoryState(isLoading: false);
-  }
+  const factory ListStoryState({
+    @Default(false) bool isLoading,
+    StoryGetAllResponseModel? model,
+  }) = _ListStoryState;
 
   String get message => model?.message ?? "";
 
   bool get isError => model?.error ?? false;
-
-  bool get isSuccess => !(model?.error ?? true);
-
-  ListStoryState makeLoading(bool loading) {
-    return ListStoryState(
-      isLoading: loading,
-      model: null,
-    );
-  }
-
-  ListStoryState copy({
-    bool? isLoading,
-    StoryGetAllResponseModel? model,
-  }) {
-    return ListStoryState(
-      isLoading: isLoading ?? this.isLoading,
-      model: model ?? this.model,
-    );
-  }
-
-  ListStoryState getResult(StoryGetAllResponseModel model) {
-    return ListStoryState(
-      isLoading: false,
-      model: model,
-    );
-  }
 }

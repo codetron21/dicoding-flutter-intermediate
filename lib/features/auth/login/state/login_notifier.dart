@@ -1,7 +1,7 @@
 import 'package:dicoding_story_app/features/auth/login/model/login_request_model.dart';
 import 'package:dicoding_story_app/features/auth/login/services/login_services.dart';
 import 'package:dicoding_story_app/features/auth/login/state/login_state.dart';
-import 'package:dicoding_story_app/main_notifier.dart';
+import 'package:dicoding_story_app/main/main_notifier.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class LoginNotifier extends StateNotifier<LoginState> {
@@ -25,30 +25,32 @@ class LoginNotifier extends StateNotifier<LoginState> {
     required mainNotifier,
   })  : _services = services,
         _mainNotifier = mainNotifier,
-        super(LoginState.init());
+        super(const LoginState());
 
   void navigateToRegister() {
     _mainNotifier.navigateToRegister();
   }
 
-  void onLoginPressed({
+  void onLogin({
     required String email,
     required String password,
   }) async {
-    state = state.makeLoading(true);
-
-    final model = LoginRequestModel(
-      email: email,
-      password: password,
-    );
-
     try {
+      state = state.copyWith(isLoading: true);
+
+      final model = LoginRequestModel(
+        email: email,
+        password: password,
+      );
+
       final result = await _services.login(model);
-      state = state.getResult(result);
-      _mainNotifier.setToken(state.token);
-      _mainNotifier.navigateToDialog(message: state.message);
+      state = state.copyWith(isLoading: false, model: result);
+
+      _mainNotifier
+        ..setToken(state.token)
+        ..navigateToDialog(message: state.message);
     } catch (err) {
-      state = state.makeError("$err");
+      state = LoginState.makeError("$err");
     }
   }
 }

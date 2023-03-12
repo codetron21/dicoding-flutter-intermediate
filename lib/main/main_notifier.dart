@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:camera/camera.dart';
 import 'package:dicoding_story_app/common/preferences.dart';
-import 'package:dicoding_story_app/main_state.dart';
+import 'package:dicoding_story_app/main/main_state.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class MainNotifier extends StateNotifier<MainState> {
@@ -16,14 +16,18 @@ class MainNotifier extends StateNotifier<MainState> {
 
   Completer<bool> _completer = Completer();
 
-  MainNotifier(this._preferences) : super(MainState.init()) {
+  MainNotifier(this._preferences) : super(const MainState()) {
     _init();
   }
 
   void _init() async {
     String? token = await _preferences.getToken();
     if (token == null) return;
-    state = state.copy(userToken: token, isUserLoggedIn: true);
+    state = state.copyWith(userToken: token, isUserLoggedIn: true);
+  }
+
+  void setToken(String? token) {
+    state = state.copyWith(userToken: token);
   }
 
   Future<bool> waitForResult() async {
@@ -36,52 +40,50 @@ class MainNotifier extends StateNotifier<MainState> {
   }
 
   void navigateToRegister() {
-    state = state.copy(isRegister: true);
+    state = state.copyWith(isRegister: true);
   }
 
   void navigateToMain() async {
     String? token = state.userToken;
     if (token == null) return;
+
     final result = await _preferences.setToken(token);
     if (!result) return;
-    state = state.copy(userToken: token, isUserLoggedIn: true);
+
+    state = state.copyWith(userToken: token, isUserLoggedIn: true);
   }
 
   void navigateToAuth() async {
     final result = await _preferences.removeToken();
     if (!result) return;
-    state = MainState.init();
+    state = const MainState();
   }
 
   void navigateToDetail(String? storyId) {
     if (storyId == null) return;
-    state = state.copy(storyId: storyId);
+    state = state.copyWith(storyId: storyId);
   }
 
   void navigateToAdd() {
-    state = state.copy(isAddStory: true);
+    state = state.copyWith(isAddStory: true);
   }
 
   void navigateToCamera(List<CameraDescription> cameras) {
-    state = state.copy(cameras: cameras);
+    state = state.copyWith(cameras: cameras);
   }
 
   void navigateToDialog({String? message}) {
-    state = state.copy(
+    state = state.copyWith(
       isShowDialog: true,
       message: message,
     );
-  }
-
-  void setToken(String? token) {
-    state = state.copy(userToken: token);
   }
 
   void navigateToOptionsDialog(
     String? message,
     bool? commandLogout,
   ) {
-    state = state.copy(
+    state = state.copyWith(
       isShowConfirmDialog: true,
       message: message,
       commandLogout: commandLogout ?? false,
@@ -89,7 +91,7 @@ class MainNotifier extends StateNotifier<MainState> {
   }
 
   void backToMain() {
-    state = state.copy(
+    state = state.copyWith(
       isShowDialog: false,
       message: null,
       isAddStory: false,
@@ -98,7 +100,7 @@ class MainNotifier extends StateNotifier<MainState> {
 
   void onPop() {
     if (state.isShowDialog) {
-      state = state.copy(
+      state = state.copyWith(
         isShowDialog: false,
         message: null,
       );
@@ -106,7 +108,7 @@ class MainNotifier extends StateNotifier<MainState> {
     }
 
     if (state.isShowConfirmDialog) {
-      state = state.copy(
+      state = state.copyWith(
         isShowConfirmDialog: false,
         message: null,
         commandLogout: state.commandLogout ? false : false,
@@ -115,22 +117,30 @@ class MainNotifier extends StateNotifier<MainState> {
     }
 
     if (state.isRegister) {
-      state = state.copy(isRegister: false);
+      state = state.copyWith(isRegister: false);
       return;
     }
 
     if (state.cameras != null) {
-      state = state.resetCamera();
+      state = state.copyWith(
+        isAddStory: true,
+        cameras: null
+      );
       return;
     }
 
     if (state.isAddStory) {
-      state = state.resetMain();
+      state = state.copyWith(
+        isAddStory: false,
+      );
       return;
     }
 
     if (state.storyId != null) {
-      state = state.resetMain();
+      state = state.copyWith(
+        isAddStory: false,
+        storyId: null,
+      );
       return;
     }
   }

@@ -1,36 +1,15 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:dicoding_story_app/common/preferences.dart';
 import 'package:dicoding_story_app/features/story/detail/state/detail_story_notifier.dart';
-import 'package:dicoding_story_app/main/main_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class DetailStoryScreen extends ConsumerStatefulWidget {
+class DetailStoryScreen extends ConsumerWidget {
   static const valueKey = ValueKey('DetailStoryScreen');
 
   const DetailStoryScreen({super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() {
-    return DetailStoryState();
-  }
-}
-
-class DetailStoryState extends ConsumerState<DetailStoryScreen> {
-  @override
-  void initState() {
-    super.initState();
-    final sharedPref = ref.read(LoginPreferences.provider);
-    final storyId = ref.read(MainNotifier.provider).storyId;
-
-    sharedPref.getToken().then((token) {
-      if (token == null || storyId == null) return;
-      ref.read(DetailStoryNotifier.provider.notifier).getStory(token, storyId);
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final detailState = ref.watch(DetailStoryNotifier.provider);
     return Scaffold(
         appBar: AppBar(
@@ -47,7 +26,7 @@ class DetailStoryState extends ConsumerState<DetailStoryScreen> {
                   Stack(
                     children: [
                       CachedNetworkImage(
-                        imageUrl: detailState.model!.story.photoUrl,
+                        imageUrl: detailState.model?.story?.photoUrl ?? '',
                         fit: BoxFit.cover,
                         width: double.infinity,
                         height: 200,
@@ -70,7 +49,7 @@ class DetailStoryState extends ConsumerState<DetailStoryScreen> {
                             ),
                           ),
                           child: Text(
-                            detailState.model!.story.createdAt,
+                            detailState.model?.story?.createdAt ?? '',
                             style: const TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.w600,
@@ -86,7 +65,7 @@ class DetailStoryState extends ConsumerState<DetailStoryScreen> {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         Text(
-                          detailState.model!.story.name,
+                          detailState.model?.story?.name ?? '',
                           style: const TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 18,
@@ -101,7 +80,7 @@ class DetailStoryState extends ConsumerState<DetailStoryScreen> {
                           ),
                         ),
                         Text(
-                          detailState.model!.story.description,
+                          detailState.model?.story?.description ?? '',
                           textAlign: TextAlign.justify,
                         ),
                       ],

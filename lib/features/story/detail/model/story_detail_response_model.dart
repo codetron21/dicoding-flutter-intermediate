@@ -10,7 +10,7 @@ class StoryDetailResponseModel {
   @JsonKey(name: 'message')
   final String message;
   @JsonKey(name: 'story')
-  final StoryResponseModel story;
+  final StoryResponseModel? story;
 
   StoryDetailResponseModel({
     required this.error,

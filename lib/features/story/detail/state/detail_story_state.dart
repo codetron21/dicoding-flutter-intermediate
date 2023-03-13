@@ -18,4 +18,15 @@ class DetailStoryState with _$DetailStoryState {
   bool get isError => model?.error ?? false;
 
   bool get isSuccess => !(model?.error ?? true);
+
+  factory DetailStoryState.makeError(String message) {
+    return DetailStoryState(
+      isLoading: false,
+      model: StoryDetailResponseModel(
+        error: true,
+        message: message,
+        story: null,
+      ),
+    );
+  }
 }

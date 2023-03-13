@@ -11,7 +11,9 @@ StoryDetailResponseModel _$StoryDetailResponseModelFromJson(
     StoryDetailResponseModel(
       error: json['error'] as bool,
       message: json['message'] as String,
-      story: StoryResponseModel.fromJson(json['story'] as Map<String, dynamic>),
+      story: json['story'] == null
+          ? null
+          : StoryResponseModel.fromJson(json['story'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$StoryDetailResponseModelToJson(

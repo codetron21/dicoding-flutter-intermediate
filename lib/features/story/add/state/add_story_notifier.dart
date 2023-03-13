@@ -10,29 +10,43 @@ class AddStoryNotifier extends StateNotifier<AddStoryState> {
     (ref) {
       final services = ref.read(StoriesServices.provider);
       final mainNotifier = ref.read(MainNotifier.provider.notifier);
-      return AddStoryNotifier(services, mainNotifier);
+      final token = ref.read(MainNotifier.provider).userToken;
+      return AddStoryNotifier(services, mainNotifier, token);
     },
   );
 
   final StoriesServices _services;
   final MainNotifier _mainNotifier;
+  final String? _token;
 
   AddStoryNotifier(
     this._services,
     this._mainNotifier,
+    this._token,
   ) : super(const AddStoryState());
 
   void navigateToCamera(List<CameraDescription> cameras) {
     _mainNotifier.navigateToCamera(cameras);
   }
 
-  void addStory(String token, XFile file, String description) async {
-    final fileName = file.name;
-    final bytes = await file.readAsBytes();
+  void addStory(XFile? file, String? description) async {
+    if (file == null || description == null) {
+      _mainNotifier.navigateToDialog(message: 'Please fill all form.');
+      return;
+    }
 
-    state = state.copyWith(isLoading: true);
+    final token = _token;
+    if (token == null) {
+      _mainNotifier.navigateToDialog(message: 'Unauthorized');
+      return;
+    }
 
     try {
+      final fileName = file.name;
+      final bytes = await file.readAsBytes();
+
+      state = state.copyWith(isLoading: true);
+
       final result =
           await _services.addStory(token, bytes, fileName, description);
       state = state.copyWith(isLoading: false, model: result);

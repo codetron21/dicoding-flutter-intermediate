@@ -44,16 +44,17 @@ class AddStoryValueNotifier extends StateNotifier<AddStoryValueState> {
     state = state.copyWith(messageDescError: "");
   }
 
-  bool onButtonAddPressed() {
+  void onButtonAddPressed(
+      void Function(XFile? file, String? description) callback) {
     final file = state.imageFile;
     final description = state.description;
 
     if (file == null || description.isEmpty) {
       onDescriptionOnChanged(description);
       setImageFile(file);
-      return false;
+      return;
     }
 
-    return true;
+    callback(file, description);
   }
 }

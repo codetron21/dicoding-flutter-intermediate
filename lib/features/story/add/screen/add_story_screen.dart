@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:camera/camera.dart';
-import 'package:dicoding_story_app/common/preferences.dart';
 import 'package:dicoding_story_app/features/story/add/state/add_story_notifier.dart';
 import 'package:dicoding_story_app/features/story/add/state/add_story_value_notifier.dart';
 import 'package:flutter/material.dart';
@@ -134,7 +133,10 @@ class AddStoryState extends ConsumerState<AddStoryScreen> {
                   onPressed: addStoryState.isLoading
                       ? null
                       : () {
-                          addStory(ref);
+                          addStoryValNotifier
+                              .onButtonAddPressed((file, description) {
+                            addStoryNotifier.addStory(file, description);
+                          });
                         },
                   child: const Text("Add"),
                 ),
@@ -149,22 +151,6 @@ class AddStoryState extends ConsumerState<AddStoryScreen> {
         ],
       ),
     );
-  }
-
-  Future<void> addStory(WidgetRef ref) async {
-    final valNotifier = ref.read(AddStoryValueNotifier.provider.notifier);
-    final valState = ref.read(AddStoryValueNotifier.provider);
-    final notifier = ref.read(AddStoryNotifier.provider.notifier);
-    final isValid = valNotifier.onButtonAddPressed();
-
-    if (!isValid) return;
-
-    final token = await ref.read(LoginPreferences.provider).getToken();
-    final imageFile = valState.imageFile;
-
-    if (token == null || imageFile == null) return;
-
-    notifier.addStory(token, imageFile, valState.description);
   }
 
   Widget _showImage(String imagePath) {

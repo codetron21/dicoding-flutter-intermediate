@@ -4,13 +4,43 @@ import 'package:dicoding_story_app/features/story/model/story_response_model.dar
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class ListStoryScreen extends ConsumerWidget {
+class ListStoryScreen extends ConsumerStatefulWidget {
   static const valueKey = ValueKey('ListStoryScreen');
 
   const ListStoryScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ConsumerStatefulWidget> createState() {
+    return ListStoryScreenState();
+  }
+}
+
+class ListStoryScreenState extends ConsumerState<ListStoryScreen> {
+  final ScrollController scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    scrollController.addListener(() {
+      if (scrollController.position.pixels >=
+          scrollController.position.maxScrollExtent) {
+        if (ref.read(ListStoryNotifier.provider).hasPage) {
+          ref
+              .read(ListStoryNotifier.provider.notifier)
+              .getAll(isRefresh: false);
+        }
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final listStoryState = ref.watch(ListStoryNotifier.provider);
     final listStoryNotifier = ref.read(ListStoryNotifier.provider.notifier);
 
@@ -38,9 +68,23 @@ class ListStoryScreen extends ConsumerWidget {
         children: [
           if (!listStoryState.isError)
             ListView.separated(
+              controller: scrollController,
               padding: const EdgeInsets.all(8),
               itemBuilder: (context, index) {
-                final story = listStoryState.model?.listStory[index];
+                final modelSize = listStoryState.model?.listStory?.length ?? 0;
+
+                if (!listStoryState.isLoading &&
+                    index == modelSize &&
+                    listStoryState.hasPage) {
+                  return const Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(8),
+                      child: CircularProgressIndicator(),
+                    ),
+                  );
+                }
+
+                final story = listStoryState.model?.listStory?[index];
                 if (story == null) return Container();
                 return _StoryItem(
                   story: story,
@@ -52,7 +96,8 @@ class ListStoryScreen extends ConsumerWidget {
               separatorBuilder: (context, index) {
                 return const SizedBox(height: 8);
               },
-              itemCount: listStoryState.model?.listStory.length ?? 0,
+              itemCount: (listStoryState.model?.listStory?.length ?? 0) +
+                  (listStoryState.hasPage ? 1 : 0),
             ),
           if (listStoryState.isError)
             Align(

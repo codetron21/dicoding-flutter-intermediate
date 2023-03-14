@@ -13,8 +13,8 @@ class StoriesServices {
 
   final String _baseUrl = 'https://story-api.dicoding.dev/v1';
 
-  Future<StoryGetAllResponseModel> getAll(String token) async {
-    final endPoints = "$_baseUrl/stories";
+  Future<StoryGetAllResponseModel> getAll(String token, {int page=1}) async {
+    final endPoints = "$_baseUrl/stories?size=10&page=$page";
     final url = Uri.parse(endPoints);
     final headers = {"Authorization": "Bearer $token"};
     final response = await http.get(url, headers: headers);

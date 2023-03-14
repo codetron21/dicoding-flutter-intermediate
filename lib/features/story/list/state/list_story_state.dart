@@ -10,8 +10,11 @@ class ListStoryState with _$ListStoryState {
 
   const factory ListStoryState({
     @Default(false) bool isLoading,
+    @Default(1) int? currentPage,
     StoryGetAllResponseModel? model,
   }) = _ListStoryState;
+
+  bool get hasPage => currentPage != null;
 
   String get message => model?.message ?? "";
 

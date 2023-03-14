@@ -27,8 +27,11 @@ class ListStoryNotifier extends StateNotifier<ListStoryState> {
     getAll();
   }
 
-  void getAll() async {
-    state = state.copyWith(isLoading: true);
+  void getAll({bool isRefresh = true}) async {
+    state = state.copyWith(
+      isLoading: isRefresh,
+      model: isRefresh ? null : state.model,
+    );
 
     var token = _mainNotifier.state.userToken;
 
@@ -42,8 +45,35 @@ class ListStoryNotifier extends StateNotifier<ListStoryState> {
       return;
     }
 
-    final result = await _services.getAll(token);
-    state = state.copyWith(model: result, isLoading: false);
+    int? page = state.currentPage;
+
+    if (isRefresh) {
+      page = 1;
+    }
+
+    if (page == null) {
+      state = state.copyWith(isLoading: false);
+      return;
+    }
+
+    final result = await _services.getAll(token, page: page);
+    final stories = result.listStory ?? [];
+
+    if (stories.length < 10) {
+      page = null;
+    } else {
+      page += 1;
+    }
+
+    final currentStories = (state.model?.listStory ?? []);
+
+    state = state.copyWith(
+      model: result.copyWith(
+        listStory: List.from(currentStories)..addAll(stories.toList()),
+      ),
+      isLoading: false,
+      currentPage: page,
+    );
   }
 
   void onAddClicked() async {
